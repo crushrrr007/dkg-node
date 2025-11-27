@@ -4,6 +4,8 @@ import { authorized, createOAuthPlugin } from "@dkg/plugin-oauth";
 import dkgEssentialsPlugin from "@dkg/plugin-dkg-essentials";
 import createFsBlobStorage from "@dkg/plugin-dkg-essentials/createFsBlobStorage";
 import examplePlugin from "@dkg/plugin-example";
+import example1Plugin from "@dkg/plugin-example1";
+import publishnotePlugin from "@dkg/plugin-publishnote";
 import swaggerPlugin from "@dkg/plugin-swagger";
 //@ts-expect-error No types for dkg.js ...
 import DKG from "dkg.js";
@@ -123,6 +125,8 @@ const app = createPluginServer({
         },
       ],
     }),
+    example1Plugin,
+    publishnotePlugin,
     webInterfacePlugin(path.join(__dirname, "./app")),
   ],
 });
