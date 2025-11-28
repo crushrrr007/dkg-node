@@ -92,13 +92,13 @@ export default defineDkgPlugin((ctx, mcp, api) => {
   // Fetch Knowledge Asset by UAL
   // ============================================
   api.get(
-    "/publishnote/get/:ual",
+    "/publishnote/get",
     openAPIRoute(
       {
         tag: "Publish Note",
         summary: "Get Knowledge Asset",
         description: "Retrieves a Knowledge Asset from the DKG using its UAL",
-        params: z.object({
+        query: z.object({
           ual: z.string().openapi({
             description: "Universal Asset Locator (UAL) of the Knowledge Asset",
             example: "did:dkg:otp:2043/0x1234567890abcdef/123456/789012"
@@ -115,17 +115,23 @@ export default defineDkgPlugin((ctx, mcp, api) => {
       },
       async (req, res) => {
         try {
-          const { ual } = req.params;
-
-          // Fetch from DKG
+          const { ual } = req.query;  // <-- Changed from req.params
+  
+          if (!ual || typeof ual !== 'string') {
+            return res.status(400).json({
+              success: false,
+              error: "UAL query parameter is required"
+            });
+          }
+  
           const result = await ctx.dkg.asset.get(ual);
-
+  
           return res.json({
             success: true,
-            ual: ual,
+            ual,
             content: result.public || result
           });
-
+  
         } catch (error: any) {
           console.error("Error fetching Knowledge Asset:", error);
           return res.status(500).json({
